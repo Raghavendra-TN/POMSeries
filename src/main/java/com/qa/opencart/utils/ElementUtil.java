@@ -403,7 +403,7 @@ public class ElementUtil {
                 .pollingEvery(Duration.ofSeconds(pollingTime))
                 .ignoring(NoSuchElementException.class)
                 .ignoring(StaleElementReferenceException.class)
-                .withMessage(Error.ELEMENT_NOT_FOUND_ERROR_MESSG);
+                .withMessage(Errors.ELEMENT_NOT_FOUND_ERROR_MESSG);
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
@@ -413,7 +413,7 @@ public class ElementUtil {
                 .pollingEvery(Duration.ofSeconds(pollingTime))
                 .ignoring(NoSuchElementException.class)
                 .ignoring(StaleElementReferenceException.class)
-                .withMessage(Error.ELEMENT_NOT_FOUND_ERROR_MESSG);
+                .withMessage(Errors.ELEMENT_NOT_FOUND_ERROR_MESSG);
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
