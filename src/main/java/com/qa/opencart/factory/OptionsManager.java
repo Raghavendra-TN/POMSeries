@@ -16,6 +16,11 @@ public class OptionsManager {
     }
     public ChromeOptions getChromeOptions(){
         co = new ChromeOptions();
+
+//        if(Boolean.parseBoolean("remote")){
+//            co.setPlatformName("Linux");
+//            co.setBrowserVersion("94");
+//        }
         if(Boolean.parseBoolean(prop.getProperty("headless"))){
             co.addArguments("--headless");
         }
@@ -26,7 +31,7 @@ public class OptionsManager {
 
     }
 
-    public FirefoxOptions getFirefoOptions() {
+    public FirefoxOptions getFirefoxOptions() {
         fo = new FirefoxOptions();
         if(Boolean.parseBoolean(prop.getProperty("headless"))){
             fo.addArguments("--headless");

@@ -6,7 +6,11 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
@@ -39,12 +43,24 @@ public class DriverFactory {
 
         if(browserName.equals("chrome")){
             WebDriverManager.chromedriver().setup();
-            //driver = new ChromeDriver(optionsManager.getChromeOptions());
-            tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+
+            if (Boolean.parseBoolean(prop.getProperty("remote"))){
+                //remote code
+                init_remoteDriver("chrome");
+            }else {
+                //local
+                //driver = new ChromeDriver(optionsManager.getChromeOptions());
+                tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+            }
         } else if(browserName.equals("firefox")){
             WebDriverManager.firefoxdriver().setup();
             //driver = new FirefoxDriver(optionsManager.getFirefoOptions());
-            tlDriver.set(new FirefoxDriver(optionsManager.getFirefoOptions()));
+            if (Boolean.parseBoolean(prop.getProperty("remote"))){
+                //remote code
+                init_remoteDriver("firefox");
+            } else {
+                tlDriver.set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
+            }
         } else if(browserName.equals("safari")){
             //driver = new SafariDriver();
             tlDriver.set(new SafariDriver());
@@ -66,6 +82,32 @@ public class DriverFactory {
             e.printStackTrace();
         }
         return getDriver();
+    }
+
+    private void init_remoteDriver(String browser) {
+        System.out.println("Running test on remote grid server: "+ browser);
+        if(browser.equalsIgnoreCase("chrome")){
+            DesiredCapabilities cap = new DesiredCapabilities();
+           // cap.setBrowserName("chrome");
+            cap.setCapability(ChromeOptions.CAPABILITY, optionsManager.getChromeOptions());
+            try {
+                tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), cap));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if(browser.equalsIgnoreCase("firefox")){
+                DesiredCapabilities cap = new DesiredCapabilities();
+                cap.setBrowserName("firefox");
+               // cap.setCapability(FirefoxOptions.FIREFOX_OPTIONS, optionsManager.getFirefoxOptions());
+                try {
+                    tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), cap));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+        }
+
     }
 
     /**
